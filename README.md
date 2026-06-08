@@ -145,8 +145,61 @@ Gõ lệnh kích hoạt toàn bộ hệ thống chạy ngầm:
 sudo docker compose up -d
 ```
 ##. Thực hành:
+- Khởi tạo dự án
+```bash
+mkdir bt5
+```
 - Cấu hình file docker-compose.yml
   ```bash
   sudo nano docker-compose.yml
   ```
+  - Sau khi cấu hình xong file yml thì chạy lệnh up -d để pull các dịch vụ:
+    <img width="1463" height="272" alt="image" src="https://github.com/user-attachments/assets/0ca232f7-197c-41d0-a4ec-38b7a0222376" />
+<img width="1452" height="425" alt="image" src="https://github.com/user-attachments/assets/ab4b1721-ff80-4800-ad4c-b343b5823915" />
+ - Đăng nhập mariadb qua phpadmin để tạo bảng lưu log giá vàng mỗi khi có thay đổi:
+   <img width="826" height="407" alt="image" src="https://github.com/user-attachments/assets/2dfc1979-532f-451e-826f-5f6f1dcde28a" />
+- Đăng nhập InfluxDB để lấy API token kết nối vớt node-red và grafana ( Copy api token lưu lại)
+  <img width="1915" height="687" alt="image" src="https://github.com/user-attachments/assets/d7b99f2e-4577-4475-9a0f-6cfe58af0e79" />
+
+- Đăng nhập vào grafana, add datasource loại influxdb và cấu hình đúng api, url, org, bucket để kết nối tới influx lấy dữ liệu vẽ biểu đồ:
+  + Thêm code truy vấn( Query cho biểu đồ) để lấy dữ liệu giá vàng từ Influxdb
+  + Chọn loại biểu đồ dạng Time Series
+  + Đặt tên cho panel và lưu lại
+    <img width="1476" height="896" alt="image" src="https://github.com/user-attachments/assets/eff6fb69-86da-4747-9369-4efd11799f0b" />
+- Tạo group telegram, thêm người dùng và bot vào, sau đó lấy id của nhóm để cấu hình bên nodered:
+<img width="1837" height="601" alt="image" src="https://github.com/user-attachments/assets/f79c1b29-72f1-41ca-bc5a-0c3ccb0279ee" />
+
+- Cấu hình nodered để gọi API lấy giá vàng và lưu dữ liệu, gửi thông báo:
+  + Node gọi API:
+    <img width="1121" height="852" alt="image" src="https://github.com/user-attachments/assets/86bf77c0-3fe9-429f-a720-0ee39624799f" />
+
+  + Node lọc giá trị ( chỉ gửi đi nếu giá thay đổi):
+    <img width="643" height="497" alt="image" src="https://github.com/user-attachments/assets/b69de404-902f-4738-938d-d32073b36ba4" />
+  + Node function xử lí dữ liệu:
+    <img width="815" height="816" alt="image" src="https://github.com/user-attachments/assets/1a5a616d-46bc-42f8-b987-e92e63114f69" />
+    <img width="815" height="806" alt="image" src="https://github.com/user-attachments/assets/b1142e8c-e5e1-4651-99be-292ab6de54ab" />
+
+  + Node kết nối tới bot tele và gửi thông báo:
+    <img width="721" height="804" alt="image" src="https://github.com/user-attachments/assets/31ec6875-9656-4af0-be6f-9354cfed102d" />
+  + Flow tổng thể dự án:
+    <img width="1246" height="531" alt="image" src="https://github.com/user-attachments/assets/25dfa110-d00a-414a-a7bb-f4e2cc180c24" />
+
+- Kết quả sau khi deploy:
+  + Telegram:
+    <img width="1456" height="886" alt="image" src="https://github.com/user-attachments/assets/c411827d-2b41-4572-92b4-3c003cad1b53" />
+  + InfluxDB:
+    <img width="1857" height="959" alt="image" src="https://github.com/user-attachments/assets/b3d19133-ef95-4ea6-89a5-072519619541" />
+  + Grafana:
+    <img width="1469" height="899" alt="image" src="https://github.com/user-attachments/assets/02de486b-c34d-45ed-9487-96f1fb73cb95" />
+- Sử dụng nginx làm webserver:
+  + Tạo file requirements.txt bên trong thư mục backend
+    <img width="972" height="170" alt="image" src="https://github.com/user-attachments/assets/e10c3e75-ae14-4c75-bce2-e6606b7525f9" />
+  + Viết file app.py để làm API lấy giá trị tức thời từ MariaDB nhả về cho Frontend:
+    <img width="1476" height="753" alt="image" src="https://github.com/user-attachments/assets/0ce9005f-d9ae-4d67-add0-d7fef11b917f" />
+  + Trang giao diện chính do Nginx thực hiện chạy, sử dụng AJAX Fetch API để tự động cập nhật số mới từ Flask sau mỗi 3 giây mà không cần F5 trang, đồng thời nhúng Grafana qua iframe:
+    <img width="1479" height="747" alt="image" src="https://github.com/user-attachments/assets/aa0df51d-69da-4c78-977f-898157e127e0" />
++ Tắt cụm container cũ
++ hởi động lại toàn bộ cụm mới:
+  <img width="1467" height="304" alt="image" src="https://github.com/user-attachments/assets/6805ab1b-f1e2-47cb-a58c-962a3dba51d2" />
+
   
